@@ -47,7 +47,7 @@ Don't hesitate to file a bug, request a feature, or simply comment using issues.
 
 If you want to help here's a few useful tasks I have in mind for this project:
 
-- [ ] Email verification and email invitatiions
+- [ ] Email verification and email invitations
 - [ ] CI
 - [ ] example deployment instructions
 - [ ] Write a tutorial to re-create this repo from scratch
