@@ -1,6 +1,7 @@
 --migrations/TIMESTAMP_users/up.sql
 CREATE TABLE users (
-  email VARCHAR(100) NOT NULL PRIMARY KEY,
+  id BIGSERIAL PRIMARY KEY,
+  email VARCHAR(100) NOT NULL,
   hash_pass VARCHAR(128) NOT NULL, -- TODO: maybe too long for argon hash
-  created_at TIMESTAMP NOT NULL
+  created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );

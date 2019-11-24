@@ -1,13 +1,11 @@
-use diesel::prelude::*;
-use hyper::{Request,Response,Body,StatusCode};
+// use diesel::prelude::*;
 use futures_util::try_stream::TryStreamExt;
+use hyper::{Body, Request, Response, StatusCode};
 
 //
-use crate::models::User;
 use crate::errors::ServiceError;
-use crate::utils::pass_hash::{hash_password, create_token};
-
-
+use crate::models::{NewUser, User};
+use crate::utils::pass_hash::AuthnToken;
 
 #[derive(Debug, Deserialize)]
 pub struct RegisterUserIn {
@@ -25,22 +23,20 @@ async fn parse_req(req: Request<Body>) -> Result<RegisterUserIn, ServiceError> {
 async fn process(registerUserIn: RegisterUserIn) -> Result<User, ServiceError> {
     let db_conn = crate::utils::db_conn_pool::get_db_conn()?;
 
-    use crate::schema::users::dsl::users;
-    let hashed_pass: String = hash_password(&registerUserIn.password)?;
-    let user = User::from_details(registerUserIn.email, hashed_pass);
-    let inserted_user: User = diesel::insert_into(users).values(&user).get_result(&db_conn)?;
-    
-    Ok(inserted_user.into())
+    let newUser = NewUser::from_credentials(&registerUserIn.email, &registerUserIn.password)?;
+    let user = newUser.insert(&db_conn)?;
+
+    Ok(user)
 }
 
 async fn make_response(user: User) -> Result<Response<Body>, ServiceError> {
     let body = serde_json::json!({"user": &user.email}).to_string();
+    let token = AuthnToken::from_userId(user.id)?.to_string();
     Ok(Response::builder()
         .status(StatusCode::OK)
-        .header("Set-Cookie", format!("token={}", create_token(user.email)?))
+        .header("Set-Cookie", format!("token={}", token))
         .header("Access-Control-Allow-Credentials", "true") // WATCH OUT SECURITY ISSUE
-        .body(Body::from(body))?
-    )
+        .body(Body::from(body))?)
 }
 
 pub async fn handle(req: Request<Body>) -> Result<Response<Body>, ServiceError> {

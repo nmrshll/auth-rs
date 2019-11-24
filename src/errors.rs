@@ -118,6 +118,16 @@ impl From<r2d2::Error> for ServiceError {
         ServiceError::InternalServerError
     }
 }
+impl From<base64::DecodeError> for ServiceError {
+    fn from(_e: base64::DecodeError) -> Self {
+        ServiceError::InternalServerError
+    }
+}
+impl From<secp256k1::Error> for ServiceError {
+    fn from(_e: secp256k1::Error) -> Self {
+        ServiceError::InternalServerError
+    }
+}
 // impl From<http::header::value::ToStrError> for ServiceError {
 //     fn from(_err: http::header::value::ToStrError) -> Self {
 //         ServiceError::InternalServerError

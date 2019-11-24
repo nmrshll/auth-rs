@@ -18,6 +18,7 @@ mod routes;
 mod schema;
 mod utils;
 use errors::ServiceError;
+use routes::middleware;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -45,27 +46,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
                         path if path.starts_with("/protected") => {
                             routes::protected::handle(req).await
                         }
+                        "/posts" => routes::_posts::handle(req).await,
 
                         _ => Ok(Response::builder()
                             .status(StatusCode::NOT_FOUND)
                             .body(Body::empty())?),
                     };
 
-                    let resp = match processRes {
-                        Ok(resp) => resp,
-                        Err(err) => err.into_resp(),
-                    };
-
-                    // middleware: process resp
-                    let resp = {
-                        // add access control header
-                        let (mut parts, body) = resp.into_parts();
-                        parts.headers.insert(
-                            "Access-Control-Allow-Origin",
-                            "http://localhost:5000".parse().unwrap(),
-                        ); // WATCH OUT SECURITY ISSUE
-                        Response::from_parts(parts, body)
-                    };
+                    let resp = middleware::errToResp(processRes);
+                    let resp = middleware::accessControlHeader(resp);
 
                     debug!("RESPONSE: {:?}", resp);
                     Ok::<_, ServiceError>(resp)

@@ -3,12 +3,11 @@ dev: deps pg adminer migrate
 	cargo watch -x run
 
 
-ee:
-	curl https://postb.in/1574032959011-8172133432235 -b token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJsb2NhbGhvc3QiLCJzdWIiOiJhdXRoIiwiaWF0IjoxNTc0MDMzOTY4LCJleHAiOjE1NzQxMjAzNjgsImVtYWlsIjoidXNlci5lbWFpbEBnbWFpbC5jb20ifQ.ShBANdNwu4Fw2AjlEB7Dq5gGmxk9WvZi_eEYWOs8LhI
+
 protected:
-	curl -X POST http://${API_ADDR}/protected/ -d '{}' -b token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJsb2NhbGhvc3QiLCJzdWIiOiJhdXRoIiwiaWF0IjoxNTc0MDMzOTY4LCJleHAiOjE1NzQxMjAzNjgsImVtYWlsIjoidXNlci5lbWFpbEBnbWFpbC5jb20ifQ.ShBANdNwu4Fw2AjlEB7Dq5gGmxk9WvZi_eEYWOs8LhI
+	curl -X POST http://${API_ADDR}/protected/ -d '{}' -b token=AAAAAF3Xvg0AAAAAXdkPjQAAAAAAAAAB2dED23NwFsCtZAz59+b00GE9o29UGYfiW0ALLbY17ssfTCe+d57nInnAbJx6uFR81evjZfIpl0BSxjCkT29g3g==
 login:
-	curl -X POST http://${API_ADDR}/auth/ -d '{"email":"user.email@gmail.com", "password":"nopass"}' --cookie-jar .cache/cookies
+	curl -X POST http://${API_ADDR}/auth/ -d '{"email":"user.email@gmail.com", "password":"nopass"}'
 users/check:
 	curl -X POST http://${API_ADDR}/users/check -d '{"email":"user.email@gmail.com"}'
 users/register:
@@ -35,7 +34,6 @@ ifContainerMissing = @docker container inspect ${container_name} > /dev/null 2>&
 
 # DEPS
 deps: rust-version
-	@diesel --version | grep 1.4.0 $s || cargo install diesel_cli --no-default-features --features postgres --version 1.4.0
 	@drill --version | grep 0.5.0 $s || cargo install drill --version 0.5.0
 rust-version:
 	@rustc --version | grep -E 'nightly.*2019-10-28' $s || rustup default nightly-2019-10-28

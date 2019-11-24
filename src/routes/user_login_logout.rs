@@ -5,15 +5,12 @@ use std::error::Error;
 
 //
 use crate::errors::ServiceError;
-// use crate::routes::respond_with_code;
+use crate::models::User;
 use crate::utils::db_conn_pool;
-use crate::utils::pass_hash;
-// use crate::models::User;
+use crate::utils::pass_hash::{self, AuthnToken};
 
 mod login {
     use super::*;
-    //
-    use crate::models::User;
 
     #[derive(Debug, Deserialize)]
     pub struct UserAuthIn {
@@ -30,7 +27,6 @@ mod login {
                 ctx: err.description().into(),
                 source: Box::new(err),
             }),
-            // (err.description())),
         }
     }
 
@@ -54,14 +50,13 @@ mod login {
 
     pub async fn make_response(user: User) -> Result<Response<Body>, ServiceError> {
         let body = serde_json::json!({"user": &user.email}).to_string();
+        let token = AuthnToken::from_userId(user.id)?.to_string();
+        dbg!(&token);
 
-        // set JWT / signed cookie with userID
+        // set signed cookie with userID
         Ok(Response::builder()
             .status(StatusCode::OK)
-            .header(
-                "Set-Cookie",
-                format!("token={}", pass_hash::create_token(user.email)?),
-            )
+            .header("Set-Cookie", format!("token={}", token))
             .body(Body::from(body))?)
     }
 }
