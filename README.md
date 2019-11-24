@@ -1,6 +1,7 @@
 # Auth-rs
 
 A minimal authentication / authorization server using Rust, Hyper, Postgres, and async/await .
+
 I didn't easily find any ready-made examples that do just that, so here's one.
 
 ## Features
@@ -15,7 +16,7 @@ and also:
 - **Great performance and minimal footprint** thanks to Rust, Hyper, tokio and async/await syntax
 - **Users database** using Postgres
 
-#### Limitations
+### Limitations
 
 - As of now, this example is usable for writing API routes in Rust (i.e. starting from this code and extending). Usage with an other stack might be possible but wasn't yet taken into consideration for this project.
 
@@ -46,7 +47,7 @@ Don't hesitate to file a bug, request a feature, or simply comment using issues.
 
 If you want to help here's a few useful tasks I have in mind for this project:
 
-[] Email verification and email invitatiions
-[] CI
-[] example deployment instructions
-[] Write a tutorial to re-create this repo from scratch
+- [] Email verification and email invitatiions
+- [] CI
+- [] example deployment instructions
+- [] Write a tutorial to re-create this repo from scratch
