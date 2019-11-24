@@ -10,9 +10,10 @@ use crate::utils::pass_hash::hash_password;
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
 pub struct User {
     pub id: i64,
+    pub created_at: NaiveDateTime, // Local::now().naive_local()
+    //
     pub email: String,
     pub hash_pass: String,
-    pub created_at: NaiveDateTime, // Local::now().naive_local()
 }
 
 #[derive(Insertable)]

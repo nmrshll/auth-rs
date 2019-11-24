@@ -5,13 +5,15 @@ dev: deps pg adminer migrate
 
 
 protected:
-	curl -X POST http://${API_ADDR}/protected/ -d '{}' -b token=AAAAAF3Xvg0AAAAAXdkPjQAAAAAAAAAB2dED23NwFsCtZAz59+b00GE9o29UGYfiW0ALLbY17ssfTCe+d57nInnAbJx6uFR81evjZfIpl0BSxjCkT29g3g==
-login:
-	curl -X POST http://${API_ADDR}/auth/ -d '{"email":"user.email@gmail.com", "password":"nopass"}'
+	curl -X POST http://${API_ADDR}/protected/ -d '{}' -b token=AAAAAF3avy4AAAAAXdwQrgAAAAAAAAABZvLHEexqQgbaTTniiMEqSGlWfoAUPEpfSXRMwQErfrF05DCvVOAFO1JaC/9bld5K4xmfvlwT/cs5FQNVJ7ll6A==
+users/login:
+	curl -X POST http://${API_ADDR}/auth/ -i -d '{"email":"user.email@gmail.com", "password":"nopass"}'
 users/check:
 	curl -X POST http://${API_ADDR}/users/check -d '{"email":"user.email@gmail.com"}'
 users/register:
 	curl -X POST http://${API_ADDR}/users/register -d '{"email":"user.email@gmail.com","password":"nopass"}'
+posts/create:
+	curl -X POST http://${API_ADDR}/posts -d '{"title":"someTitle","body":"someBody"}' -b token=AAAAAF3avy4AAAAAXdwQrgAAAAAAAAABZvLHEexqQgbaTTniiMEqSGlWfoAUPEpfSXRMwQErfrF05DCvVOAFO1JaC/9bld5K4xmfvlwT/cs5FQNVJ7ll6A==
 DEFAULT_PORT=8080
 API_ADDR=127.0.0.1:${DEFAULT_PORT}
 

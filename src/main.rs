@@ -46,7 +46,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
                         path if path.starts_with("/protected") => {
                             routes::protected::handle(req).await
                         }
-                        "/posts" => routes::_posts::handle(req).await,
+                        "/posts" => routes::posts_create::handle(req).await,
 
                         _ => Ok(Response::builder()
                             .status(StatusCode::NOT_FOUND)

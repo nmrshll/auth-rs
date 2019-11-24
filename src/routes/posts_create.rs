@@ -7,11 +7,15 @@ use crate::errors::ServiceError;
 use crate::models::post::{NewPost, Post};
 use crate::schema::posts;
 use crate::utils::db_conn_pool;
+use crate::utils::pass_hash::AuthnToken;
 
 #[derive(Debug, Deserialize)]
 pub struct CreatePostIn {
     pub title: String,
     pub body: String,
+}
+pub struct Ctx {
+    pub token: AuthnToken,
 }
 
 async fn parse_req(req: Request<Body>) -> Result<CreatePostIn, ServiceError> {
@@ -21,12 +25,13 @@ async fn parse_req(req: Request<Body>) -> Result<CreatePostIn, ServiceError> {
     Ok(createPostIn)
 }
 
-async fn process<'a>(createPostIn: CreatePostIn) -> Result<Post, ServiceError> {
+async fn process<'a>(ctx: Ctx, createPostIn: CreatePostIn) -> Result<Post, ServiceError> {
     let db_conn = db_conn_pool::get_db_conn()?;
 
     let new_post = NewPost {
         title: &createPostIn.title,
         body: &createPostIn.body,
+        author_id: ctx.token.claims.userID,
     };
 
     let inserted_post = diesel::insert_into(posts::table)
@@ -46,9 +51,11 @@ async fn make_response(post: Post) -> Result<Response<Body>, ServiceError> {
 }
 
 pub async fn handle(req: Request<Body>) -> Result<Response<Body>, ServiceError> {
-    let _token = tokenAuthn(&req)?;
+    let ctx = Ctx {
+        token: tokenAuthn(&req)?,
+    };
     //
     let createPostIn = parse_req(req).await?;
-    let post = process(createPostIn).await?;
+    let post = process(ctx, createPostIn).await?;
     make_response(post).await
 }

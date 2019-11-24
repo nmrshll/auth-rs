@@ -1,9 +1,11 @@
 -- Your SQL goes here
 CREATE TABLE posts (
-  id SERIAL PRIMARY KEY,
+  id BIGSERIAL PRIMARY KEY,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  --
   title VARCHAR NOT NULL,
   body TEXT NOT NULL,
-  published BOOLEAN NOT NULL DEFAULT 'false'
+  published BOOLEAN NOT NULL DEFAULT 'false',
   --
-  -- author BIGINT NOT NULL references users(id)
+  author_id BIGINT NOT NULL references users(id)
 );
