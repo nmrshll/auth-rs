@@ -37,7 +37,7 @@ Test requests are included in the payload (using `curl`)
 
 - **Register a user** using `make users/register`
 - **Check if an email is already taken** using `make users/check`
-- **Login** using `make login`
+- **Login** using `make users/login`
 - **Access a dummy protected route** using `make protected`
 - **Create a post belonging to a user** using `make posts/create`
 
