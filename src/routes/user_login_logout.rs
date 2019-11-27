@@ -56,7 +56,7 @@ mod login {
         // set signed cookie with userID
         Ok(Response::builder()
             .status(StatusCode::OK)
-            .header("Set-Cookie", format!("token={}", token))
+            .header("Set-Cookie", format!("token={};Path=/", token))
             .body(Body::from(body))?)
     }
 }

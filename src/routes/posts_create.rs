@@ -51,6 +51,8 @@ async fn make_response(post: Post) -> Result<Response<Body>, ServiceError> {
 }
 
 pub async fn handle(req: Request<Body>) -> Result<Response<Body>, ServiceError> {
+    let token = tokenAuthn(&req)?;
+    dbg!(&token);
     let ctx = Ctx {
         token: tokenAuthn(&req)?,
     };

@@ -1,5 +1,6 @@
 use diesel::result::{DatabaseErrorKind, Error as DBError};
 use hyper::header::CONTENT_LENGTH;
+use hyper::http;
 use hyper::{Body, Response, StatusCode};
 use log::error;
 use snafu::Snafu;
@@ -98,11 +99,13 @@ impl From<DBError> for ServiceError {
 }
 impl From<hyper::Error> for ServiceError {
     fn from(err: hyper::Error) -> ServiceError {
+        dbg!(&err);
         ServiceError::HyperError { hyperError: err }
     }
 }
 impl From<hyper::http::Error> for ServiceError {
-    fn from(_err: hyper::http::Error) -> ServiceError {
+    fn from(err: hyper::http::Error) -> ServiceError {
+        dbg!(&err);
         ServiceError::InternalServerError
     }
 }
@@ -114,18 +117,26 @@ impl From<serde_json::error::Error> for ServiceError {
     }
 }
 impl From<r2d2::Error> for ServiceError {
-    fn from(_err: r2d2::Error) -> Self {
+    fn from(err: r2d2::Error) -> Self {
+        dbg!(&err);
         ServiceError::InternalServerError
     }
 }
 impl From<base64::DecodeError> for ServiceError {
-    fn from(_e: base64::DecodeError) -> Self {
+    fn from(e: base64::DecodeError) -> Self {
+        dbg!(&e);
         ServiceError::InternalServerError
     }
 }
 impl From<secp256k1::Error> for ServiceError {
-    fn from(_e: secp256k1::Error) -> Self {
+    fn from(e: secp256k1::Error) -> Self {
+        dbg!(&e);
         ServiceError::InternalServerError
+    }
+}
+impl From<http::header::ToStrError> for ServiceError {
+    fn from(e: http::header::ToStrError) -> Self {
+        Self::InternalServerError
     }
 }
 // impl From<http::header::value::ToStrError> for ServiceError {
