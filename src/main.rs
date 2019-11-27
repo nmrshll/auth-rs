@@ -23,7 +23,7 @@ use routes::middleware;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     dotenv::dotenv().ok();
-    std::env::set_var("RUST_LOG", "notajobboard_api_rs=debug");
+    std::env::set_var("RUST_LOG", "notajobboard_api_hyper=debug");
     std::env::set_var("RUST_BACKTRACE", "1");
     pretty_env_logger::init();
 
@@ -54,7 +54,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
                     };
 
                     let resp = middleware::errToResp(processRes);
-                    let resp = middleware::accessControlHeader(resp);
+                    let resp = middleware::accessControlHeaders(resp);
 
                     debug!("RESPONSE: {:?}", resp);
                     Ok::<_, ServiceError>(resp)

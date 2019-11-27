@@ -42,8 +42,8 @@ async fn process<'a>(ctx: Ctx, createPostIn: CreatePostIn) -> Result<Post, Servi
 }
 
 async fn make_response(post: Post) -> Result<Response<Body>, ServiceError> {
-    // let body = serde_json::json!({ "post": &post }).to_string();
-    let body = serde_json::to_string(&post)?;
+    let body = serde_json::json!({ "post": &post }).to_string();
+    // let body = serde_json::to_string(&post)?;
     Ok(Response::builder()
         .status(StatusCode::OK)
         .header("Access-Control-Allow-Credentials", "true") // WATCH OUT SECURITY ISSUE
