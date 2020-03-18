@@ -33,7 +33,7 @@ Run `make`
 
 ## Testing
 
-Test requests are included in the payload (using `curl`)
+Test requests are included in the makefile (using `curl`)
 
 - **Register a user** using `make users/register`
 - **Check if an email is already taken** using `make users/check`
